@@ -16,7 +16,7 @@ import { MoveValidator } from "./components/moveValidator";
 const getClassName = (row, column, value) => {
   const isLight = (row + column) % 2 === 0;
   const isHighlighted =
-    value === BLACK_PIECE_HIGHLIGHTED || value == RED_PIECE_HIGHLIGHTED;
+    value === BLACK_PIECE_HIGHLIGHTED || value === RED_PIECE_HIGHLIGHTED;
   const hasBlackPiece =
     value === BLACK_PIECE || value === BLACK_PIECE_HIGHLIGHTED;
   const hasRedPiece = value === RED_PIECE || value === RED_PIECE_HIGHLIGHTED;
