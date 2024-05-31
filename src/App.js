@@ -31,7 +31,6 @@ const getClassName = (row, column, value) => {
     piece = 'withredpiece';
   }
   const c = `square ${squareColor} ${piece}`;
-  console.log(c);
   return c;
 }
 
@@ -75,15 +74,126 @@ function App() {
     return newSquares
   });
 
+  const [gamePhase, setGamePhase] = useState(() => {
+    return BLACK_TO_PLAY;
+  });
+
+  const [chosenPiece, setChosenPiece] = useState(null);
+
+  function toIndex(row, column) {
+    return row*8 + column;
+  }
+
+  function squareIsOccupied(index) {
+    return squares[index] != null;
+  }
+
+  function isSimpleMove(index) {
+    const chosenPieceRow = Math.floor(chosenPiece / 8);
+    const chosenPieceColumn = chosenPiece % 8;
+    const targetRow = Math.floor(index / 8);
+    const targetColumn = index % 8;
+
+    return (
+      targetRow === chosenPieceRow - 1 
+      && (targetColumn === chosenPieceColumn + 1 || targetColumn == chosenPieceColumn - 1)
+    );
+  }
+
+  function isSingleCapture(index) {
+    const chosenPieceRow = Math.floor(chosenPiece / 8);
+    const chosenPieceColumn = chosenPiece % 8;
+    const targetRow = Math.floor(index / 8);
+    const targetColumn = index % 8;
+
+    const correctTargetRow = targetRow === chosenPieceRow - 2;
+    if (!correctTargetRow) {
+      return false;
+    }
+    const isUpAndLeft = targetColumn < chosenPieceColumn;
+    let pieceToCapture, correctTargetColumn;
+    if (isUpAndLeft) {
+      pieceToCapture = squares[toIndex(chosenPieceRow - 1, chosenPieceColumn - 1)];
+      correctTargetColumn = targetColumn === chosenPieceColumn - 2;
+    } else {
+      pieceToCapture = squares[toIndex(chosenPieceRow - 1, chosenPieceColumn + 1)];
+      correctTargetColumn = targetColumn === chosenPieceColumn + 2;
+    }
+    return pieceToCapture && correctTargetColumn; // and we already know correctTargetRow is true.
+  }
+
+  // Get the index of the piece we should remove for a capture by chosenPiece to index.
+  function getCapturedIndexForMoveTo(index) {
+    const chosenPieceRow = Math.floor(chosenPiece / 8);
+    const chosenPieceColumn = chosenPiece % 8;
+    const targetRow = Math.floor(index / 8);
+    const targetColumn = index % 8;
+    const isUpAndLeft = targetColumn < chosenPieceColumn;
+    const rowToRemove = chosenPieceRow - 1;
+    if (isUpAndLeft) {
+      const columnToRemove = chosenPieceColumn - 1;
+      return rowToRemove*8 + columnToRemove;
+    } else {
+      const columnToRemove = chosenPieceColumn + 1;
+      return rowToRemove*8 + columnToRemove;
+    }
+  }
+
+  function chosenPieceCanMoveTo(index) {
+    // TODO: this is all only for the bottom player.
+    if (squareIsOccupied(index)) {
+      return false;
+    }
+    if (isSimpleMove(index)) { // normal hop to an adjacent square
+      return true;
+    }
+    if (isSingleCapture(index)) { // single capture
+      return true;
+    }
+    return false;
+  }
+
+  function executeMove(index) {
+    const nextSquares = squares.slice();
+    // Remove the piece from its current square.
+    nextSquares[chosenPiece] = null;
+    // Put the piece on the target square.
+    nextSquares[index] = BLACK_PIECE;
+    // If it's a capture, remove the one in between.
+    if (isSingleCapture(index)) {
+      nextSquares[getCapturedIndexForMoveTo(index)] = null;
+    }
+    console.log(chosenPiece);
+    console.log(index);
+    setSquares(nextSquares);
+    setGamePhase(RED_TO_PLAY); // TODO, obviously.
+  }
 
   // Callback for when a square is clicked.
   function onPlay(gamePhase, squares, index) {
-    console.log('Running onPlay!');
+    console.log(`Running onPlay! phase=${gamePhase}, index=${index}`);
     if (gamePhase === BLACK_TO_PLAY) {
       if (squares[index] === BLACK_PIECE){
         const nextSquares = squares.slice();
         nextSquares[index] = BLACK_PIECE_HIGHLIGHTED;
         setSquares(nextSquares);
+        setGamePhase(BLACK_CHOSE_PIECE);
+        setChosenPiece(index)
+      }
+    }
+    else if (gamePhase === BLACK_CHOSE_PIECE) {
+      if (index === chosenPiece) {
+        const nextSquares = squares.slice();
+        nextSquares[index] = BLACK_PIECE;
+        setSquares(nextSquares);
+        setGamePhase(BLACK_TO_PLAY);
+        setChosenPiece(null);
+      } else {
+        if (chosenPieceCanMoveTo(index)) {
+          executeMove(index);
+        } else {
+          console.log("invalid!");
+        }
       }
     }
   }
@@ -91,7 +201,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>Dammen!</p>
-        <Board gamePhase={BLACK_TO_PLAY} squares={squares} onPlay={onPlay}/>
+        <Board gamePhase={gamePhase} squares={squares} onPlay={onPlay}/>
       </header>
     </div>
   );
