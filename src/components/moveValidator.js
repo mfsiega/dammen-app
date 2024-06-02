@@ -10,7 +10,6 @@ export class MoveValidator {
   }
 
   squareIsOccupied(index) {
-    console.log(this.squares);
     return this.squares[index] != null;
   }
 
@@ -118,6 +117,7 @@ export class MoveValidator {
         this.squares[this.toIndex(chosenPieceRow + 1, chosenPieceColumn + 1)];
       correctTargetColumn = targetColumn === chosenPieceColumn + 2;
     }
+    console.log(hasPieceToCapture && correctTargetColumn);
     return hasPieceToCapture && correctTargetColumn; // and we already know correctTargetRow is true.
   }
 

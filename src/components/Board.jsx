@@ -40,8 +40,7 @@ function Square({ row, column, value, onSquareClick }) {
   );
 }
 
-export function Board({ gamePhase, squares, onPlay }) {
-  console.log(squares);
+export function Board({ squares, onPlay }) {
   return (
     <>
       <div className="board">
@@ -51,7 +50,7 @@ export function Board({ gamePhase, squares, onPlay }) {
             row={Math.floor(index / 8)}
             column={index % 8}
             value={squares[index]}
-            onSquareClick={() => onPlay(gamePhase, squares, index)}
+            onSquareClick={() => onPlay(index)}
           />
         ))}
       </div>

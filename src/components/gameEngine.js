@@ -1,75 +1,114 @@
-function executeMove(index) {
-  const validator = new MoveValidator(chosenPiece, gamePhase, squares);
-  const nextSquares = squares.slice();
-  // Remove the piece from its current square.
-  nextSquares[chosenPiece] = null;
-  // Put the piece on the target square.
-  if (gamePhase === BLACK_CHOSE_PIECE) {
-    nextSquares[index] = BLACK_PIECE;
-    if (validator.isSingleCapturePlayerOne(index)) {
-      nextSquares[getCapturedIndexForMovePlayerOne(chosenPiece, index)] = null;
-    }
-    setGamePhase(RED_TO_PLAY);
-  } else {
-    nextSquares[index] = RED_PIECE;
-    if (validator.isSingleCapturePlayerTwo(index)) {
-      nextSquares[getCapturedIndexForMovePlayerTwo(chosenPiece, index)] = null;
-    }
-    setGamePhase(BLACK_TO_PLAY);
-  }
-  setSquares(nextSquares);
-}
+import { MoveValidator } from "./moveValidator";
+import {
+  getCapturedIndexForMovePlayerOne,
+  getCapturedIndexForMovePlayerTwo,
+} from "../common/helpers";
+import {
+  BLACK_PIECE,
+  RED_PIECE,
+  BLACK_CHOSE_PIECE,
+  RED_CHOSE_PIECE,
+  BLACK_TO_PLAY,
+  RED_TO_PLAY,
+  BLACK_PIECE_HIGHLIGHTED,
+  RED_PIECE_HIGHLIGHTED,
+} from "../common/constants";
 
-// Callback for when a square is clicked.
-function onPlay(gamePhase, squares, index) {
-  console.log(`Running onPlay! phase=${gamePhase}, index=${index}`);
-  if (gamePhase === BLACK_TO_PLAY) {
-    if (squares[index] === BLACK_PIECE) {
-      const nextSquares = squares.slice();
-      nextSquares[index] = BLACK_PIECE_HIGHLIGHTED;
-      setSquares(nextSquares);
-      setGamePhase(BLACK_CHOSE_PIECE);
-      setChosenPiece(index);
-    }
-  } else if (gamePhase === BLACK_CHOSE_PIECE) {
-    const validator = new MoveValidator(chosenPiece, gamePhase, squares);
-    if (index === chosenPiece) {
-      const nextSquares = squares.slice();
-      nextSquares[index] = BLACK_PIECE;
-      setSquares(nextSquares);
-      setGamePhase(BLACK_TO_PLAY);
-      setChosenPiece(null);
-    } else {
-      if (validator.chosenPieceCanMoveTo(index)) {
-        executeMove(index);
-      } else {
-        console.log("invalid!");
+export class GameEngine {
+  constructor(gamePhase, squares, chosenPiece) {
+    this.gamePhase = gamePhase;
+    this.squares = squares;
+    this.chosenPiece = chosenPiece;
+    this.moveValidator = new MoveValidator(chosenPiece, gamePhase, squares);
+  }
+
+  isLegalMove(index) {
+    switch (this.gamePhase) {
+      case BLACK_TO_PLAY: {
+        return this.squares[index] === BLACK_PIECE;
       }
-    }
-  } else if (gamePhase === RED_TO_PLAY) {
-    if (squares[index] === RED_PIECE) {
-      const nextSquares = squares.slice();
-      nextSquares[index] = RED_PIECE_HIGHLIGHTED;
-      setSquares(nextSquares);
-      setGamePhase(RED_CHOSE_PIECE);
-      setChosenPiece(index);
-    }
-  } else if (gamePhase === RED_CHOSE_PIECE) {
-    const validator = new MoveValidator(chosenPiece, gamePhase, squares);
-    if (index === chosenPiece) {
-      // Unselect the piece.
-      const nextSquares = squares.slice();
-      nextSquares[index] = RED_PIECE;
-      setSquares(nextSquares);
-      setGamePhase(RED_TO_PLAY);
-      setChosenPiece(null);
-    } else {
-      // Move the piece, if allowed.
-      if (validator.chosenPieceCanMoveTo(index)) {
-        executeMove(index);
-      } else {
-        console.log("invalid!");
+      case BLACK_CHOSE_PIECE: {
+        return (
+          index === this.chosenPiece || // deselect the chosen piece
+          this.moveValidator.chosenPieceCanMoveTo(index)
+        );
       }
+      case RED_TO_PLAY: {
+        return this.squares[index] === RED_PIECE;
+      }
+      case RED_CHOSE_PIECE: {
+        return (
+          index === this.chosenPiece || // deselect the chosen piece
+          this.moveValidator.chosenPieceCanMoveTo(index)
+        );
+      }
+      default:
+        throw new Error(`Unexpected game phase: ${this.gamePhase}`);
     }
+  }
+
+  // Note: we assume that the move has already been validated via isLegalMove.
+  executeMove(index) {
+    switch (this.gamePhase) {
+      case BLACK_TO_PLAY: {
+        this.squares[index] = BLACK_PIECE_HIGHLIGHTED;
+        this.chosenPiece = index;
+        this.gamePhase = BLACK_CHOSE_PIECE;
+        break;
+      }
+      case RED_TO_PLAY: {
+        this.squares[index] = RED_PIECE_HIGHLIGHTED;
+        this.chosenPiece = index;
+        this.gamePhase = RED_CHOSE_PIECE;
+        break;
+      }
+      case BLACK_CHOSE_PIECE: {
+        if (index === this.chosenPiece) {
+          this.squares[this.chosenPiece] = BLACK_PIECE;
+          this.gamePhase = BLACK_TO_PLAY;
+          this.chosenPiece = null;
+        } else {
+          this.squares[this.chosenPiece] = null;
+          this.squares[index] = BLACK_PIECE;
+          if (this.moveValidator.isSingleCapturePlayerOne(index)) {
+            const pieceToRemove = getCapturedIndexForMovePlayerOne(
+              this.chosenPiece,
+              index,
+            );
+            this.squares[pieceToRemove] = null;
+          }
+          this.gamePhase = RED_TO_PLAY;
+          this.chosenPiece = null;
+        }
+        break;
+      }
+      case RED_CHOSE_PIECE: {
+        if (index === this.chosenPiece) {
+          this.squares[this.chosenPiece] = RED_PIECE;
+          this.gamePhase = RED_TO_PLAY;
+          this.chosenPiece = null;
+        } else {
+          this.squares[this.chosenPiece] = null;
+          this.squares[index] = RED_PIECE;
+          if (this.moveValidator.isSingleCapturePlayerTwo(index)) {
+            const pieceToRemove = getCapturedIndexForMovePlayerTwo(
+              this.chosenPiece,
+              index,
+            );
+            console.log(pieceToRemove);
+            this.squares[pieceToRemove] = null;
+          }
+          this.gamePhase = BLACK_TO_PLAY;
+          this.chosenPiece = null;
+        }
+        break;
+      }
+      default:
+        throw new Error(`Unexpected game phase: ${this.gamePhase}`);
+    }
+  }
+
+  getGameState() {
+    return [this.squares, this.gamePhase, this.chosenPiece];
   }
 }
