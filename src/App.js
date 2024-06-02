@@ -7,13 +7,11 @@ import { GameEngine } from "./components/gameEngine";
 import { getInitialBoard } from "./common/helpers";
 
 function App() {
-  // Initialization.
+  // Game state.
   const [squares, setSquares] = useState(getInitialBoard);
-
   const [gamePhase, setGamePhase] = useState(() => {
     return BLACK_TO_PLAY;
   });
-
   const [chosenPiece, setChosenPiece] = useState(null);
 
   // The engine has the current state of the game.

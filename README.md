@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+# Dammen!
+Dit is het bordspel Dammen, als React App. De app is gemaakt als opdracht.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Gebruikerswijzing
+Ga naar https://mfsiega.github.io/dammen-app/.
 
-## Available Scripts
+Om een stuk te verplaatsen, click op je stuk, en dan de bestemming.
+Het is verplicht om te slaan wanneer dit mogelijk is.
 
-In the project directory, you can run:
+Als je deze app zelf wilt opzetten, moet je eerst:
+- NodeJS en npm installeren.
+- De code downloaden.
+- `npm start` van de directory waar je de code hebt opgeslagen.
 
-### `npm start`
+# Toelichting van de code
+Dit project is gemaakt door `npx create-react-app dammen-app`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+De belangrijke files zijn:
+- `src/App.js`
+- `src/components/*`
+- `src/common/*`
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+De structuur is als volgt.
 
-### `npm test`
+## Structuur
+App.js is het toegangspunt. Het heeft de basis structuur:
+- Een bord, dat de UI tekent en user input doorgeeft.
+- Een game engine, die de zetten regelt.
+- De game state. Die is iets bijzonders van React - als de game state verandert,
+  wordt de UI opnieuw getekent.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Het bord
+Het bord component heeft twee functies:
+- De UI tekenen. Een visueel beeld van de game state, dus.
+- Een callback gebruiken als een player een zet maakt.
 
-### `npm run build`
+De callback geeft informatie door aan de game engine.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Game engine
+Hier hebben we de centrale logica van de app. Het heeft drie belangrijke functies:
+- `isLegalMove` die bepaalt of en zet mag of niet.
+- `executeMove` die een zet uitvoert.
+- `getState` die de game state geeft, om het spel door te brengen.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+De game engine maakt gebruikt van de `MoveValidator` class. Die heeft handige functies,
+maar is vooral een abstraction om de complexiteit van de regels in te houden.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Game state
+In App.js gebruiken we bjv `setSquares`. Dit is belangrijk in de React lifecycle.
+Als de state verandert, wordt de component opnieuw rendered.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# Volgende stappen
+Deze app is nog niet klaar! De volgende stappen zijn:
+- Een simpel AI maken.
+- Algemene UI verbeteringen.
