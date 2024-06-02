@@ -11,8 +11,12 @@ import {
   BLACK_CHOSE_PIECE,
   RED_CHOSE_PIECE,
 } from "./common/constants";
+import {
+  getCapturedIndexForMovePlayerOne,
+  getCapturedIndexForMovePlayerTwo,
+} from "./common/helpers";
 import { MoveValidator } from "./components/moveValidator";
-import {Board} from "./components/Board";
+import { Board } from "./components/Board";
 
 function App() {
   // Initialization.
@@ -40,36 +44,6 @@ function App() {
 
   const [chosenPiece, setChosenPiece] = useState(null);
 
-  // Get the index of the piece we should remove for a capture by chosenPiece to index.
-  function getCapturedIndexForMoveToPlayerOne(index) {
-    const chosenPieceRow = Math.floor(chosenPiece / 8);
-    const chosenPieceColumn = chosenPiece % 8;
-    const targetColumn = index % 8;
-    const isUpAndLeft = targetColumn < chosenPieceColumn;
-    const rowToRemove = chosenPieceRow - 1;
-    if (isUpAndLeft) {
-      const columnToRemove = chosenPieceColumn - 1;
-      return rowToRemove * 8 + columnToRemove;
-    } else {
-      const columnToRemove = chosenPieceColumn + 1;
-      return rowToRemove * 8 + columnToRemove;
-    }
-  }
-  function getCapturedIndexForMoveToPlayerTwo(index) {
-    const chosenPieceRow = Math.floor(chosenPiece / 8);
-    const chosenPieceColumn = chosenPiece % 8;
-    const targetColumn = index % 8;
-    const isUpAndLeft = targetColumn < chosenPieceColumn;
-    const rowToRemove = chosenPieceRow + 1;
-    if (isUpAndLeft) {
-      const columnToRemove = chosenPieceColumn - 1;
-      return rowToRemove * 8 + columnToRemove;
-    } else {
-      const columnToRemove = chosenPieceColumn + 1;
-      return rowToRemove * 8 + columnToRemove;
-    }
-  }
-
   function executeMove(index) {
     const validator = new MoveValidator(chosenPiece, gamePhase, squares);
     const nextSquares = squares.slice();
@@ -79,13 +53,13 @@ function App() {
     if (gamePhase === BLACK_CHOSE_PIECE) {
       nextSquares[index] = BLACK_PIECE;
       if (validator.isSingleCapturePlayerOne(index)) {
-        nextSquares[getCapturedIndexForMoveToPlayerOne(index)] = null;
+        nextSquares[getCapturedIndexForMovePlayerOne(index)] = null;
       }
       setGamePhase(RED_TO_PLAY);
     } else {
       nextSquares[index] = RED_PIECE;
       if (validator.isSingleCapturePlayerTwo(index)) {
-        nextSquares[getCapturedIndexForMoveToPlayerTwo(index)] = null;
+        nextSquares[getCapturedIndexForMovePlayerTwo(index)] = null;
       }
       setGamePhase(BLACK_TO_PLAY);
     }

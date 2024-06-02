@@ -100,7 +100,9 @@ export class MoveValidator {
     const chosenPieceColumn = this.chosenPiece % 8;
     const targetRow = Math.floor(index / 8);
     const targetColumn = index % 8;
-    console.log(`${chosenPieceRow} ${chosenPieceColumn} ${targetRow} ${targetColumn}`);
+    console.log(
+      `${chosenPieceRow} ${chosenPieceColumn} ${targetRow} ${targetColumn}`,
+    );
     const correctTargetRow = targetRow === chosenPieceRow + 2;
     if (!correctTargetRow) {
       return false;
