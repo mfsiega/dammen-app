@@ -29,6 +29,18 @@ App.js is het toegangspunt. Het heeft de basis structuur:
 - De game state. Die is iets bijzonders van React - als de game state verandert,
   wordt de UI opnieuw getekent.
 
+## De game loop
+Het spel loopt door vier standen:
+- BLACK_TO_PLAY, de eerste speler kiest een stuk.
+- BLACK_CHOSE_PIECE, de eerste speler heeft een stuk gekozen en moet en zet kiezen.
+- RED_TO_PLAY na de zet van de eerste speler, kiest de tweede speler een stuk.
+- RED_CHOSE_PIECE de tweede speler kiest een zet.
+
+## De game state
+- Game phase, welk van de hierboven standen.
+- Squares, wat staat op de velden. `HIGHLIGHTED` betekent dat de speler dit stuk gekozen heeft.
+- Chosen piece, de stuk dat gekozen is.
+
 ### Het bord
 Het bord component heeft twee functies:
 - De UI tekenen. Een visueel beeld van de game state, dus.
