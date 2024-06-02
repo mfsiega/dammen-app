@@ -75,7 +75,6 @@ export class GameEngine {
    * @param {int} index
    */
   executeMove(index) {
-    console.log(`executing ${index} for game phase ${this.gamePhase}`);
     switch (this.gamePhase) {
       case BLACK_TO_PLAY: {
         this.squares[index] = BLACK_PIECE_HIGHLIGHTED;
@@ -122,7 +121,6 @@ export class GameEngine {
               this.chosenPiece,
               index,
             );
-            console.log(pieceToRemove);
             this.squares[pieceToRemove] = null;
           }
           this.gamePhase = BLACK_TO_PLAY;

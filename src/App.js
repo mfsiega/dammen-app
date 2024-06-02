@@ -27,7 +27,6 @@ function App() {
     if (engine.isLegalMove(index)) {
       engine.executeMove(index);
       [newSquares, newPhase, newChosenPiece] = engine.getGameState();
-      console.log(newPhase);
       setSquares(newSquares);
       setGamePhase(newPhase);
       setChosenPiece(newChosenPiece);
@@ -37,7 +36,6 @@ function App() {
       engine.executeMove(nextMoves[0]);
       engine.executeMove(nextMoves[1]);
       [newSquares, newPhase, newChosenPiece] = engine.getGameState();
-      console.log(newPhase);
       setSquares(newSquares);
       setGamePhase(newPhase);
       setChosenPiece(newChosenPiece);
