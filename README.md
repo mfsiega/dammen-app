@@ -53,3 +53,4 @@ Als de state verandert, wordt de component opnieuw rendered.
 Deze app is nog niet klaar! De volgende stappen zijn:
 - Een simpel AI maken.
 - Algemene UI verbeteringen.
+- Testing!
