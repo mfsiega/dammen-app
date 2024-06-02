@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/dammen-app/static/css/main.ab612dd2.css",
-    "main.js": "/dammen-app/static/js/main.26be3d69.js",
+    "main.js": "/dammen-app/static/js/main.4b0385ca.js",
     "static/js/453.9706e0fa.chunk.js": "/dammen-app/static/js/453.9706e0fa.chunk.js",
     "index.html": "/dammen-app/index.html",
     "static/media/black-piece.svg": "/dammen-app/static/media/black-piece.ad2bb1fe83befecbcf17.svg",
     "static/media/red-piece.svg": "/dammen-app/static/media/red-piece.bced40519dfb9d443426.svg",
     "main.ab612dd2.css.map": "/dammen-app/static/css/main.ab612dd2.css.map",
-    "main.26be3d69.js.map": "/dammen-app/static/js/main.26be3d69.js.map",
+    "main.4b0385ca.js.map": "/dammen-app/static/js/main.4b0385ca.js.map",
     "453.9706e0fa.chunk.js.map": "/dammen-app/static/js/453.9706e0fa.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ab612dd2.css",
-    "static/js/main.26be3d69.js"
+    "static/js/main.4b0385ca.js"
   ]
 }
