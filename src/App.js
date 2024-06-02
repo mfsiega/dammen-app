@@ -1,10 +1,11 @@
 import { useState } from "react";
 import "./App.css";
 
-import { BLACK_TO_PLAY } from "./common/constants";
+import { BLACK_TO_PLAY, RED_TO_PLAY } from "./common/constants";
 import { Board } from "./components/Board";
 import { GameEngine } from "./components/gameEngine";
 import { getInitialBoard } from "./common/helpers";
+import { getNextMoves } from "./components/computerOpponent";
 
 /**
  * Core app component. Renders the board, and hooks it up to the game engine.
@@ -22,10 +23,21 @@ function App() {
   const engine = new GameEngine(gamePhase, squares, chosenPiece);
 
   function onPlay(index) {
+    var newSquares, newPhase, newChosenPiece;
     if (engine.isLegalMove(index)) {
       engine.executeMove(index);
-      var newSquares, newPhase, newChosenPiece;
       [newSquares, newPhase, newChosenPiece] = engine.getGameState();
+      console.log(newPhase);
+      setSquares(newSquares);
+      setGamePhase(newPhase);
+      setChosenPiece(newChosenPiece);
+    }
+    if (newPhase === RED_TO_PLAY) {
+      const nextMoves = getNextMoves(newSquares);
+      engine.executeMove(nextMoves[0]);
+      engine.executeMove(nextMoves[1]);
+      [newSquares, newPhase, newChosenPiece] = engine.getGameState();
+      console.log(newPhase);
       setSquares(newSquares);
       setGamePhase(newPhase);
       setChosenPiece(newChosenPiece);

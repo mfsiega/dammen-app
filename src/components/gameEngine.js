@@ -75,6 +75,7 @@ export class GameEngine {
    * @param {int} index
    */
   executeMove(index) {
+    console.log(`executing ${index} for game phase ${this.gamePhase}`);
     switch (this.gamePhase) {
       case BLACK_TO_PLAY: {
         this.squares[index] = BLACK_PIECE_HIGHLIGHTED;
@@ -132,6 +133,7 @@ export class GameEngine {
       default:
         throw new Error(`Unexpected game phase: ${this.gamePhase}`);
     }
+    this.moveValidator = new MoveValidator(this.chosenPiece, this.gamePhase, this.squares);
   }
 
   /**
