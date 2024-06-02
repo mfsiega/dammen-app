@@ -133,7 +133,11 @@ export class GameEngine {
       default:
         throw new Error(`Unexpected game phase: ${this.gamePhase}`);
     }
-    this.moveValidator = new MoveValidator(this.chosenPiece, this.gamePhase, this.squares);
+    this.moveValidator = new MoveValidator(
+      this.chosenPiece,
+      this.gamePhase,
+      this.squares,
+    );
   }
 
   /**

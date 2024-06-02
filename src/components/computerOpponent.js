@@ -1,4 +1,8 @@
-import { RED_PIECE, RED_CHOSE_PIECE, RED_PIECE_HIGHLIGHTED } from "../common/constants";
+import {
+  RED_PIECE,
+  RED_CHOSE_PIECE,
+  RED_PIECE_HIGHLIGHTED,
+} from "../common/constants";
 import { GameEngine } from "./gameEngine";
 
 /**
@@ -9,6 +13,9 @@ import { GameEngine } from "./gameEngine";
  * The moves will be legal.
  * The move choice is left as an implementation detail.
  * We assume that this is making moves for player 2 (RED pieces).
+ *
+ * TODO: simple search+eval, instead of picking a random move.
+ *
  * @param {int[]} squares
  */
 export function getNextMoves(squares) {
