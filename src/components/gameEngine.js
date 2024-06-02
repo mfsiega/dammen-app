@@ -22,25 +22,83 @@ export class GameEngine {
     this.moveValidator = new MoveValidator(chosenPiece, gamePhase, squares);
   }
 
+  captureIsAvailablePlayerOne() {
+    for (let pieceToMove = 0; pieceToMove < 64; pieceToMove++) {
+      if (
+        this.squares[pieceToMove] !== BLACK_PIECE &&
+        this.squares[pieceToMove] !== BLACK_PIECE_HIGHLIGHTED
+      ) {
+        continue;
+      }
+      // There's a piece here, so let's check if it can capture!
+      const validator = new MoveValidator(
+        pieceToMove,
+        BLACK_CHOSE_PIECE,
+        this.squares,
+      );
+      for (let target = 0; target < 64; target++) {
+        if (!validator.chosenPieceCanMoveTo(target)) {
+          continue;
+        }
+        if (validator.isSingleCapturePlayerOne(target)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  captureIsAvailablePlayerTwo() {
+    for (let pieceToMove = 0; pieceToMove < 64; pieceToMove++) {
+      if (
+        this.squares[pieceToMove] !== RED_PIECE &&
+        this.squares[pieceToMove] !== RED_PIECE_HIGHLIGHTED
+      ) {
+        continue;
+      }
+      // There's a piece here, so let's check if it can capture.
+      const validator = new MoveValidator(
+        pieceToMove,
+        RED_CHOSE_PIECE,
+        this.squares,
+      );
+      for (let target = 0; target < 64; target++) {
+        if (!validator.chosenPieceCanMoveTo(target)) {
+          continue;
+        }
+        if (validator.isSingleCapturePlayerTwo(target)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   isLegalMove(index) {
     switch (this.gamePhase) {
       case BLACK_TO_PLAY: {
         return this.squares[index] === BLACK_PIECE;
       }
       case BLACK_CHOSE_PIECE: {
-        return (
-          index === this.chosenPiece || // deselect the chosen piece
-          this.moveValidator.chosenPieceCanMoveTo(index)
-        );
+        if (index === this.chosenPiece) {
+          return true; // deselect the current piece.
+        }
+        return this.captureIsAvailablePlayerOne()
+          ? this.moveValidator.chosenPieceCanMoveTo(index) &&
+              this.moveValidator.isSingleCapturePlayerOne(index)
+          : this.moveValidator.chosenPieceCanMoveTo(index);
       }
       case RED_TO_PLAY: {
         return this.squares[index] === RED_PIECE;
       }
       case RED_CHOSE_PIECE: {
-        return (
-          index === this.chosenPiece || // deselect the chosen piece
-          this.moveValidator.chosenPieceCanMoveTo(index)
-        );
+        if (index === this.chosenPiece) {
+          return true; // deselect the current piece.
+        }
+        return this.captureIsAvailablePlayerTwo()
+          ? this.moveValidator.chosenPieceCanMoveTo(index) &&
+              this.moveValidator.isSingleCapturePlayerTwo(index)
+          : this.moveValidator.chosenPieceCanMoveTo(index);
       }
       default:
         throw new Error(`Unexpected game phase: ${this.gamePhase}`);

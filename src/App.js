@@ -21,7 +21,6 @@ function App() {
 
   function onPlay(index) {
     if (engine.isLegalMove(index)) {
-      console.log(`Move ${index} is legal, executing...`);
       engine.executeMove(index);
       var newSquares, newPhase, newChosenPiece;
       [newSquares, newPhase, newChosenPiece] = engine.getGameState();

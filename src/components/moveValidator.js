@@ -1,4 +1,10 @@
-import { BLACK_CHOSE_PIECE } from "../common/constants";
+import {
+  BLACK_CHOSE_PIECE,
+  BLACK_PIECE,
+  BLACK_PIECE_HIGHLIGHTED,
+  RED_PIECE,
+  RED_PIECE_HIGHLIGHTED,
+} from "../common/constants";
 
 export class MoveValidator {
   constructor(chosenPiece, gamePhase, squares) {
@@ -20,7 +26,6 @@ export class MoveValidator {
     if (this.squareIsOccupied(index)) {
       return false; // We can never move to an occupied square!
     }
-    console.log(this.gamePhase);
     if (this.gamePhase === BLACK_CHOSE_PIECE) {
       if (this.isSimpleMovePlayerOne(index)) {
         // normal hop to an adjacent square
@@ -71,11 +76,21 @@ export class MoveValidator {
     let hasPieceToCapture, correctTargetColumn;
     if (isUpAndLeft) {
       hasPieceToCapture =
-        this.squares[this.toIndex(chosenPieceRow - 1, chosenPieceColumn - 1)];
+        this.squares[
+          this.toIndex(chosenPieceRow - 1, chosenPieceColumn - 1)
+        ] === RED_PIECE ||
+        this.squares[
+          this.toIndex(chosenPieceRow - 1, chosenPieceColumn - 1)
+        ] === RED_PIECE_HIGHLIGHTED;
       correctTargetColumn = targetColumn === chosenPieceColumn - 2;
     } else {
       hasPieceToCapture =
-        this.squares[this.toIndex(chosenPieceRow - 1, chosenPieceColumn + 1)];
+        this.squares[
+          this.toIndex(chosenPieceRow - 1, chosenPieceColumn + 1)
+        ] === RED_PIECE ||
+        this.squares[
+          this.toIndex(chosenPieceRow - 1, chosenPieceColumn + 1)
+        ] === RED_PIECE_HIGHLIGHTED;
       correctTargetColumn = targetColumn === chosenPieceColumn + 2;
     }
     return hasPieceToCapture && correctTargetColumn; // and we already know correctTargetRow is true.
@@ -99,9 +114,6 @@ export class MoveValidator {
     const chosenPieceColumn = this.chosenPiece % 8;
     const targetRow = Math.floor(index / 8);
     const targetColumn = index % 8;
-    console.log(
-      `${chosenPieceRow} ${chosenPieceColumn} ${targetRow} ${targetColumn}`,
-    );
     const correctTargetRow = targetRow === chosenPieceRow + 2;
     if (!correctTargetRow) {
       return false;
@@ -109,15 +121,18 @@ export class MoveValidator {
     const isLeft = targetColumn < chosenPieceColumn;
     let hasPieceToCapture, correctTargetColumn;
     if (isLeft) {
-      hasPieceToCapture =
+      const hoppedPiece =
         this.squares[this.toIndex(chosenPieceRow + 1, chosenPieceColumn - 1)];
+      hasPieceToCapture =
+        hoppedPiece === BLACK_PIECE || hoppedPiece === BLACK_PIECE_HIGHLIGHTED;
       correctTargetColumn = targetColumn === chosenPieceColumn - 2;
     } else {
-      hasPieceToCapture =
+      const hoppedPiece =
         this.squares[this.toIndex(chosenPieceRow + 1, chosenPieceColumn + 1)];
+      hasPieceToCapture =
+        hoppedPiece === BLACK_PIECE || hoppedPiece === BLACK_PIECE_HIGHLIGHTED;
       correctTargetColumn = targetColumn === chosenPieceColumn + 2;
     }
-    console.log(hasPieceToCapture && correctTargetColumn);
     return hasPieceToCapture && correctTargetColumn; // and we already know correctTargetRow is true.
   }
 
