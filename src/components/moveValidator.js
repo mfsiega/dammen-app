@@ -20,7 +20,7 @@ export class MoveValidator {
   }
 
   // NOTE: I'm *pretty* sure it's possible to handle the directionality
-  // more cleanly, and I want to come back and fix it up, but this should
+  // more cleanly -- i.e., player one vs player two -- and I want to come back and fix it up, but this should
   // work for now.
   chosenPieceCanMoveTo(index) {
     if (this.squareIsOccupied(index)) {

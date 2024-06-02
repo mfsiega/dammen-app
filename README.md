@@ -54,3 +54,4 @@ Deze app is nog niet klaar! De volgende stappen zijn:
 - Een simpel AI maken.
 - Algemene UI verbeteringen.
 - Testing!
+- Minder duplicatie.

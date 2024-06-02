@@ -6,6 +6,10 @@ import { Board } from "./components/Board";
 import { GameEngine } from "./components/gameEngine";
 import { getInitialBoard } from "./common/helpers";
 
+/**
+ * Core app component. Renders the board, and hooks it up to the game engine.
+ * @returns template to render.
+ */
 function App() {
   // Game state.
   const [squares, setSquares] = useState(getInitialBoard);
