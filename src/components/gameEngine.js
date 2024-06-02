@@ -1,50 +1,4 @@
-import { useState } from "react";
-import "./App.css";
-
-import {
-  BLACK_PIECE_HIGHLIGHTED,
-  RED_PIECE_HIGHLIGHTED,
-  BLACK_PIECE,
-  RED_PIECE,
-  BLACK_TO_PLAY,
-  RED_TO_PLAY,
-  BLACK_CHOSE_PIECE,
-  RED_CHOSE_PIECE,
-} from "./common/constants";
-import {
-  getCapturedIndexForMovePlayerOne,
-  getCapturedIndexForMovePlayerTwo,
-} from "./common/helpers";
-import { MoveValidator } from "./components/moveValidator";
-import { Board } from "./components/Board";
-
-function App() {
-  // Initialization.
-  const [squares, setSquares] = useState(() => {
-    const newSquares = Array(8 * 8).fill(null);
-    newSquares.forEach((_, index, theSquares) => {
-      const row = Math.floor(index / 8);
-      const column = index % 8;
-      const squareIsDark = (row + column) % 2 === 1;
-      const hasRedPiece = row < 3 && squareIsDark;
-      if (hasRedPiece) {
-        theSquares[index] = RED_PIECE;
-      }
-      const hasBlackPiece = row > 4 && squareIsDark;
-      if (hasBlackPiece) {
-        theSquares[index] = BLACK_PIECE;
-      }
-    });
-    return newSquares;
-  });
-
-  const [gamePhase, setGamePhase] = useState(() => {
-    return BLACK_TO_PLAY;
-  });
-
-  const [chosenPiece, setChosenPiece] = useState(null);
-
-  function executeMove(index) {
+function executeMove(index) {
     const validator = new MoveValidator(chosenPiece, gamePhase, squares);
     const nextSquares = squares.slice();
     // Remove the piece from its current square.
@@ -53,15 +7,13 @@ function App() {
     if (gamePhase === BLACK_CHOSE_PIECE) {
       nextSquares[index] = BLACK_PIECE;
       if (validator.isSingleCapturePlayerOne(index)) {
-        nextSquares[getCapturedIndexForMovePlayerOne(chosenPiece, index)] =
-          null;
+        nextSquares[getCapturedIndexForMovePlayerOne(chosenPiece, index)] = null;
       }
       setGamePhase(RED_TO_PLAY);
     } else {
       nextSquares[index] = RED_PIECE;
       if (validator.isSingleCapturePlayerTwo(index)) {
-        nextSquares[getCapturedIndexForMovePlayerTwo(chosenPiece, index)] =
-          null;
+        nextSquares[getCapturedIndexForMovePlayerTwo(chosenPiece, index)] = null;
       }
       setGamePhase(BLACK_TO_PLAY);
     }
@@ -121,14 +73,3 @@ function App() {
       }
     }
   }
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>Dammen!</p>
-        <Board gamePhase={gamePhase} squares={squares} onPlay={onPlay} />
-      </header>
-    </div>
-  );
-}
-
-export default App;
