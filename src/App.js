@@ -53,13 +53,13 @@ function App() {
     if (gamePhase === BLACK_CHOSE_PIECE) {
       nextSquares[index] = BLACK_PIECE;
       if (validator.isSingleCapturePlayerOne(index)) {
-        nextSquares[getCapturedIndexForMovePlayerOne(index)] = null;
+        nextSquares[getCapturedIndexForMovePlayerOne(chosenPiece, index)] = null;
       }
       setGamePhase(RED_TO_PLAY);
     } else {
       nextSquares[index] = RED_PIECE;
       if (validator.isSingleCapturePlayerTwo(index)) {
-        nextSquares[getCapturedIndexForMovePlayerTwo(index)] = null;
+        nextSquares[getCapturedIndexForMovePlayerTwo(chosenPiece, index)] = null;
       }
       setGamePhase(BLACK_TO_PLAY);
     }
